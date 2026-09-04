@@ -95,6 +95,8 @@ namespace MoonBridge.Presentation.Actions
                     return PresentationActionKind.MakeCall;
                 case GameEventType.AuctionEnded:
                     return PresentationActionKind.AuctionEnded;
+                case GameEventType.HandSettled:
+                    return PresentationActionKind.HandSettled;
                 default:
                     return PresentationActionKind.PlayCardToTrick;
             }

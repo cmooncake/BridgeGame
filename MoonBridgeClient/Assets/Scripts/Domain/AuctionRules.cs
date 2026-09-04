@@ -78,7 +78,8 @@ namespace MoonBridge.Domain
 
             var lastBid = calls[lastBidIndex];
             var doubled = DoubleStatusAfter(calls, lastBidIndex);
-            contract = new Contract(lastBid.Call.Level, lastBid.Call.Strain, lastBid.Seat, doubled);
+            var declarer = FirstToBidStrain(calls, lastBid.Seat, lastBid.Call.Strain);
+            contract = new Contract(lastBid.Call.Level, lastBid.Call.Strain, declarer, doubled);
             return true;
         }
 
@@ -174,5 +175,20 @@ namespace MoonBridge.Domain
             return status;
         }
 
+        private static Seat FirstToBidStrain(IReadOnlyList<AuctionCall> calls, Seat winningSeat, BidStrain strain)
+        {
+            for (var i = 0; i < calls.Count; i++)
+            {
+                var entry = calls[i];
+                if (entry.Call.Kind == CallKind.Bid &&
+                    entry.Call.Strain == strain &&
+                    SeatRules.SameSide(entry.Seat, winningSeat))
+                {
+                    return entry.Seat;
+                }
+            }
+
+            return winningSeat;
+        }
     }
 }

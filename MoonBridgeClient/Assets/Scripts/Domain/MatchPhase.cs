@@ -5,6 +5,7 @@ namespace MoonBridge.Domain
         Idle,
         Bidding,
         Playing,
-        PassedOut
+        PassedOut,
+        Settled
     }
 }

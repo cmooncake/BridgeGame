@@ -1,5 +1,8 @@
 namespace MoonBridge.Domain
 {
+    /// <summary>
+    /// 出牌权只认座位：明手轮到时，控牌人是庄家。不区分人机。
+    /// </summary>
     public static class PlayRights
     {
         public static bool TryDummy(bool hasContract, Contract contract, out Seat dummy)

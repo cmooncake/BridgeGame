@@ -10,6 +10,7 @@ namespace MoonBridge.Runtime
         public RuntimeAction<int> DealHands;
         public RuntimeAction<BidIntent> MakeCall;
         public RuntimeAction<PlayCardIntent> PlayCard;
+        public RuntimeAction<ContinueIntent> ContinueHand;
         public RuntimeAction<GameEvent> AuthoritativeEvent;
 
         public ActionRuntime()
@@ -17,6 +18,7 @@ namespace MoonBridge.Runtime
             DealHands = Add(new RuntimeAction<int>());
             MakeCall = Add(new RuntimeAction<BidIntent>());
             PlayCard = Add(new RuntimeAction<PlayCardIntent>());
+            ContinueHand = Add(new RuntimeAction<ContinueIntent>());
             AuthoritativeEvent = Add(new RuntimeAction<GameEvent>());
         }
 

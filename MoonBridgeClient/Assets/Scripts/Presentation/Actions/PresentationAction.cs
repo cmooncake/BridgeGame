@@ -7,7 +7,8 @@ namespace MoonBridge.Presentation.Actions
         DealHands,
         MakeCall,
         AuctionEnded,
-        PlayCardToTrick
+        PlayCardToTrick,
+        HandSettled
     }
 
     public enum PresentationTiming

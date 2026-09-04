@@ -5,5 +5,6 @@ namespace MoonBridge.Game.Authoritative
         CommandResult SubmitDeal(int seed);
         CommandResult SubmitBid(BidIntent intent);
         CommandResult SubmitPlay(PlayCardIntent intent);
+        CommandResult SubmitContinue(ContinueIntent intent);
     }
 }

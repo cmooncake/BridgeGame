@@ -28,6 +28,19 @@ public static class BiddingPrefabBuilder
         Debug.Log("Created " + PrefabPath);
     }
 
+    [MenuItem("Tools/MoonBridge/Create Settlement Prefab")]
+    public static void CreateSettlementPrefab()
+    {
+        EnsureFolder("Assets/Prefabs");
+        var root = new GameObject("SettlementPanel", typeof(RectTransform));
+        var view = root.AddComponent<SettlementView>();
+        view.Build();
+        PrefabUtility.SaveAsPrefabAsset(root, "Assets/Prefabs/SettlementPanel.prefab");
+        Object.DestroyImmediate(root);
+        AssetDatabase.SaveAssets();
+        Debug.Log("Created Assets/Prefabs/SettlementPanel.prefab");
+    }
+
     private static void ConfigureSprites(string folder)
     {
         if (!AssetDatabase.IsValidFolder(folder))

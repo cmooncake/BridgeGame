@@ -7,7 +7,8 @@ namespace MoonBridge.Game.Authoritative
         Dealt,
         CallMade,
         AuctionEnded,
-        CardPlayed
+        CardPlayed,
+        HandSettled
     }
 
     public sealed class GameEvent

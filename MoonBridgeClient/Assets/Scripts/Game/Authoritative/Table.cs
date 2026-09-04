@@ -19,6 +19,13 @@ namespace MoonBridge.Game.Authoritative
         public bool TrickComplete;
         public bool HasContract;
         public Contract Contract;
+        public int DeclarerTricks;
+        public int DefenseTricks;
+        public Settlement Settlement;
+        public int BoardNumber = 1;
+        public int DealSeed;
+        public int NsMatchScore;
+        public int EwMatchScore;
 
         public TableState Current { get; private set; }
 
@@ -60,7 +67,13 @@ namespace MoonBridge.Game.Authoritative
                 LeadSuit,
                 TrickComplete,
                 HasContract,
-                Contract);
+                Contract,
+                DeclarerTricks,
+                DefenseTricks,
+                Settlement,
+                BoardNumber,
+                NsMatchScore,
+                EwMatchScore);
         }
 
         public void ClearTrick()

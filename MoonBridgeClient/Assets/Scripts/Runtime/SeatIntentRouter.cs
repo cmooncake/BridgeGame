@@ -18,7 +18,7 @@ namespace MoonBridge.Runtime
         public void DispatchCurrentTurn(TableState state, ActionRuntime actions)
         {
             IIntentSource source;
-            if (state == null || !sources.TryGetValue(ControllerOf(state), out source))
+            if (state == null || !sources.TryGetValue(PlaySeatOf(state), out source))
             {
                 return;
             }
@@ -46,7 +46,7 @@ namespace MoonBridge.Runtime
             }
         }
 
-        private static Seat ControllerOf(TableState state)
+        private static Seat PlaySeatOf(TableState state)
         {
             if (state.Phase != MatchPhase.Playing)
             {

@@ -18,6 +18,12 @@ namespace MoonBridge.Game.Authoritative
         public bool TrickComplete { get; }
         public bool HasContract { get; }
         public Contract Contract { get; }
+        public int DeclarerTricks { get; }
+        public int DefenseTricks { get; }
+        public Settlement Settlement { get; }
+        public int BoardNumber { get; }
+        public int NsMatchScore { get; }
+        public int EwMatchScore { get; }
 
         public TableState(
             int sequence,
@@ -32,7 +38,13 @@ namespace MoonBridge.Game.Authoritative
             CardSuit leadSuit,
             bool trickComplete,
             bool hasContract,
-            Contract contract)
+            Contract contract,
+            int declarerTricks,
+            int defenseTricks,
+            Settlement settlement,
+            int boardNumber,
+            int nsMatchScore,
+            int ewMatchScore)
         {
             Sequence = sequence;
             Phase = phase;
@@ -47,6 +59,12 @@ namespace MoonBridge.Game.Authoritative
             TrickComplete = trickComplete;
             HasContract = hasContract;
             Contract = contract;
+            DeclarerTricks = declarerTricks;
+            DefenseTricks = defenseTricks;
+            Settlement = settlement;
+            BoardNumber = boardNumber;
+            NsMatchScore = nsMatchScore;
+            EwMatchScore = ewMatchScore;
         }
     }
 }

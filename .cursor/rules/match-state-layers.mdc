@@ -21,11 +21,12 @@ UI / 意图源 只 Emit
 ## 各层
 
 - `Table`：牌桌数据。`LocalAuthoritativeSource` 才写。
-- Domain：跟牌、将牌、叫牌、明手牌权。无 Unity、无 UI。庄家是最后一口叫分的人，打自己和明手两手；对家明手把出牌权交给庄家。
+- Domain：跟牌、将牌、叫牌、明手牌权、复式计分。无 Unity、无 UI。庄家是本方最先叫出定约花色的人；明手轮到时控牌座位是庄家。13 墩后写入 `Settlement`，阶段为 `Settled`。核心层不区分人机。
 - `MatchStateMachine`：意图的唯一执行回调；Update 只推表现。
+- 意图源：人点牌和自动座位都是 `IIntentSource`，只在绑定时不同。不要因为庄家是自动座位就停住出牌。
 - `ActionRuntime`：按具体 action 分发。别人只 `+=` 或 Emit。
 - `PresentationRuntime`：表现资源与可取消动画的唯一入口，只 `Play` / `Cancel`，不改牌局数据。
-- UI：显示 + 收集 `BidIntent` / `PlayCardIntent`；出牌飞牌只向 `PresentationRuntime.Play` 发请求。
+- UI：显示 + 收集 `BidIntent` / `PlayCardIntent` / `ContinueIntent`；出牌飞牌只向 `PresentationRuntime.Play` 发请求。结算只读快照，继续只 Emit。
 
 ## 不要做
 

@@ -21,6 +21,7 @@ namespace MoonBridge.UI
         [SerializeField] private TrickcardView trickView;
 
         private BiddingView biddingView;
+        private SettlementView settlementView;
         private Text contractText;
         private PresentationRuntime presentation;
         private Seat playSeat = Seat.South;
@@ -32,6 +33,7 @@ namespace MoonBridge.UI
             EnsureOverlay();
             BindPresentation();
             biddingView.CallChosen += OnCallChosen;
+            settlementView.ContinueChosen += OnContinueChosen;
         }
 
         private void OnDestroy()
@@ -39,6 +41,11 @@ namespace MoonBridge.UI
             if (biddingView != null)
             {
                 biddingView.CallChosen -= OnCallChosen;
+            }
+
+            if (settlementView != null)
+            {
+                settlementView.ContinueChosen -= OnContinueChosen;
             }
 
             if (presentation != null)
@@ -56,7 +63,21 @@ namespace MoonBridge.UI
 
         private void OnCardClicked(Card card)
         {
-            MatchRuntime.Instance.Actions.PlayCard.Emit(new PlayCardIntent(playSeat, card));
+            var table = MatchRuntime.Instance != null ? MatchRuntime.Instance.Table : null;
+            if (table == null)
+            {
+                return;
+            }
+
+            var state = table.Current;
+            if (state.Phase != MatchPhase.Playing ||
+                !PlayRights.Controls(Seat.South, state.Turn, state.HasContract, state.Contract) ||
+                !ContainsCard(state.Hands[state.Turn], card))
+            {
+                return;
+            }
+
+            MatchRuntime.Instance.Actions.PlayCard.Emit(new PlayCardIntent(state.Turn, card));
         }
 
         private void OnCallChosen(Call call)
@@ -64,11 +85,21 @@ namespace MoonBridge.UI
             MatchRuntime.Instance.Actions.MakeCall.Emit(new BidIntent(Seat.South, call));
         }
 
+        private void OnContinueChosen()
+        {
+            MatchRuntime.Instance.Actions.ContinueHand.Emit(new ContinueIntent());
+        }
+
         private void HandleAuthoritativeEvent(GameEvent gameEvent)
         {
             if (gameEvent.Type == GameEventType.CardPlayed)
             {
                 PlayCardToTrickAsync(gameEvent).Forget();
+                return;
+            }
+
+            if (gameEvent.Type == GameEventType.HandSettled)
+            {
                 return;
             }
 
@@ -102,6 +133,12 @@ namespace MoonBridge.UI
             if (presentation == null || !presentation)
             {
                 trickView.Show(gameEvent.StateAfter.Trick);
+                if (gameEvent.StateAfter != null && gameEvent.StateAfter.Phase == MatchPhase.Settled)
+                {
+                    ApplySnapshot(gameEvent.StateAfter);
+                    return;
+                }
+
                 NotifyIdle();
                 return;
             }
@@ -116,6 +153,12 @@ namespace MoonBridge.UI
             });
 
             trickView.CaptureArrived(gameEvent.Seat);
+            if (gameEvent.StateAfter != null && gameEvent.StateAfter.Phase == MatchPhase.Settled)
+            {
+                ApplySnapshot(gameEvent.StateAfter);
+                return;
+            }
+
             NotifyIdle();
         }
 
@@ -130,22 +173,30 @@ namespace MoonBridge.UI
         private void ApplySnapshot(TableState state)
         {
             playSeat = state.Turn;
-            var southPlays = state.Phase == MatchPhase.Playing &&
-                             PlayRights.Controls(Seat.South, state.Turn, state.HasContract, state.Contract);
+            var playing = state.Phase == MatchPhase.Playing;
+            var southIsDeclarer = playing && state.HasContract && state.Contract.Declarer == Seat.South;
+            var southPlaysOwn = playing && !IsDummy(Seat.South, state);
 
-            selfHandView.ShowCards(ToList(state.Hands[Seat.South]), true, false, ClickIf(southPlays, Seat.South));
-            leftHandView.ShowCards(ToList(state.Hands[Seat.West]), IsDummy(Seat.West, state), true, ClickIf(southPlays, Seat.West));
-            rightHandView.ShowCards(ToList(state.Hands[Seat.East]), IsDummy(Seat.East, state), true, ClickIf(southPlays, Seat.East));
-            partnerHandView.ShowCards(ToList(state.Hands[Seat.North]), IsDummy(Seat.North, state), false, ClickIf(southPlays, Seat.North));
+            selfHandView.ShowCards(ToList(state.Hands[Seat.South]), true, false, southPlaysOwn ? OnCardClicked : null);
+            leftHandView.ShowCards(ToList(state.Hands[Seat.West]), IsDummy(Seat.West, state), true, ClickIfDummy(southIsDeclarer, Seat.West, state));
+            rightHandView.ShowCards(ToList(state.Hands[Seat.East]), IsDummy(Seat.East, state), true, ClickIfDummy(southIsDeclarer, Seat.East, state));
+            partnerHandView.ShowCards(ToList(state.Hands[Seat.North]), IsDummy(Seat.North, state), false, ClickIfDummy(southIsDeclarer, Seat.North, state));
             trickView.Show(state.Trick);
 
             if (state.Phase == MatchPhase.Bidding)
             {
                 biddingView.Show(state);
+                settlementView.Hide();
+            }
+            else if (state.Phase == MatchPhase.Settled)
+            {
+                biddingView.Hide();
+                settlementView.Show(state);
             }
             else
             {
                 biddingView.Hide();
+                settlementView.Hide();
             }
 
             contractText.text = BuildContractLabel(state);
@@ -178,6 +229,8 @@ namespace MoonBridge.UI
             var parent = canvas != null ? canvas.transform : transform;
             biddingView = BiddingView.Create(parent);
             biddingView.Hide();
+            settlementView = SettlementView.Create(parent);
+            settlementView.Hide();
 
             var go = new GameObject("ContractLabel", typeof(RectTransform));
             go.transform.SetParent(parent, false);
@@ -242,9 +295,22 @@ namespace MoonBridge.UI
             return count;
         }
 
-        private System.Action<Card> ClickIf(bool southPlays, Seat seat)
+        private System.Action<Card> ClickIfDummy(bool southIsDeclarer, Seat seat, TableState state)
         {
-            return southPlays && playSeat == seat ? (System.Action<Card>)OnCardClicked : null;
+            return southIsDeclarer && IsDummy(seat, state) ? (System.Action<Card>)OnCardClicked : null;
+        }
+
+        private static bool ContainsCard(IReadOnlyList<Card> cards, Card card)
+        {
+            for (var i = 0; i < cards.Count; i++)
+            {
+                if (cards[i].Equals(card))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool IsDummy(Seat seat, TableState state)
@@ -257,7 +323,7 @@ namespace MoonBridge.UI
 
         private static string BuildContractLabel(TableState state)
         {
-            if (state.Phase == MatchPhase.PassedOut)
+            if (state.Phase == MatchPhase.Settled && state.Settlement.IsPassOut)
             {
                 return "叫牌结束：全员 Pass";
             }

@@ -40,6 +40,7 @@ namespace MoonBridge.Runtime
             actions.DealHands += OnDealHands;
             actions.MakeCall += OnMakeCall;
             actions.PlayCard += OnPlayCard;
+            actions.ContinueHand += OnContinueHand;
             actions.AuthoritativeEvent += OnAuthoritativeEvent;
         }
 
@@ -48,6 +49,7 @@ namespace MoonBridge.Runtime
             actions.DealHands -= OnDealHands;
             actions.MakeCall -= OnMakeCall;
             actions.PlayCard -= OnPlayCard;
+            actions.ContinueHand -= OnContinueHand;
             actions.AuthoritativeEvent -= OnAuthoritativeEvent;
         }
 
@@ -89,6 +91,11 @@ namespace MoonBridge.Runtime
         private void OnPlayCard(PlayCardIntent intent)
         {
             ApplyResult(source.SubmitPlay(intent));
+        }
+
+        private void OnContinueHand(ContinueIntent intent)
+        {
+            ApplyResult(source.SubmitContinue(intent));
         }
 
         private void OnAuthoritativeEvent(GameEvent gameEvent)
