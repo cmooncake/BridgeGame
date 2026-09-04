@@ -1,0 +1,45 @@
+---
+description: MoonBridge 对局三层状态：权威、表现行动、可取消动画
+globs: Assets/Scripts/**/*.cs
+alwaysApply: true
+---
+
+# 对局状态分层
+
+数据只单向流动，禁止 UI 直接改手牌、墩或叫牌记录。
+
+```text
+UI / 意图源 只 Emit
+  → ActionList
+  → MatchStateMachine Trigger
+  → IAuthoritativeSource.Submit
+  → 本地 Domain 规则改 Table
+  → ActionList.AuthoritativeEvent
+  → 表现状态入队 / UI 按快照画画
+```
+
+## 各层
+
+- `Table`：牌桌数据。`LocalAuthoritativeSource` 才写。
+- Domain：跟牌、将牌、叫牌、明手牌权。无 Unity、无 UI。庄家是最后一口叫分的人，打自己和明手两手；对家明手把出牌权交给庄家。
+- `MatchStateMachine`：意图的唯一执行回调；Update 只推表现。
+- `ActionRuntime`：按具体 action 分发。别人只 `+=` 或 Emit。
+- `PresentationRuntime`：表现资源与可取消动画的唯一入口，只 `Play` / `Cancel`，不改牌局数据。
+- UI：显示 + 收集 `BidIntent` / `PlayCardIntent`；出牌飞牌只向 `PresentationRuntime.Play` 发请求。
+
+## 不要做
+
+```csharp
+// 错误：UI 自己改手牌
+southCards.Remove(card);
+handView.ShowCards(southCards, true, false);
+```
+
+```csharp
+// 正确：只发意图
+actions.PlayCard.Emit(new PlayCardIntent(Seat.South, card));
+actions.MakeCall.Emit(new BidIntent(Seat.South, Call.Bid(1, BidStrain.Spades)));
+```
+
+`HandcardView` / `CardView` / `TrickcardView` 只负责显示和把点击变成 `Card` 或 `Call`。
+不要在 `OfflineTable`、`MatchRuntime` 里写人机分支。

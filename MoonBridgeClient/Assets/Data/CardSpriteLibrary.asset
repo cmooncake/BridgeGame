@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a754e6097f3a9014283519578cc4c0dc, type: 3}
+  m_Name: CardSpriteLibrary
+  m_EditorClassIdentifier: 
+  blackRankSprites:
+  - {fileID: 21300000, guid: a1b045eac561a6644b0696829dc93660, type: 3}
+  - {fileID: 21300000, guid: a13e2869821d4c547b7085a30de10138, type: 3}
+  - {fileID: 21300000, guid: 901089c2474de464f95d701befe282d4, type: 3}
+  - {fileID: 21300000, guid: e01152edcbc2ba24ebafbf30e305e8b1, type: 3}
+  - {fileID: 21300000, guid: f07a9da338106bc4fb71510d9609cc01, type: 3}
+  - {fileID: 21300000, guid: 939998b527091b44a89a4cc3fc809fd2, type: 3}
+  - {fileID: 21300000, guid: c850b747c88255e46bebd68c56d12e8b, type: 3}
+  - {fileID: 21300000, guid: ff04aabbc90c1964ea1c93201f3b772d, type: 3}
+  - {fileID: 21300000, guid: 5c6b81002169dbd4d806bc3aff8bda08, type: 3}
+  - {fileID: 21300000, guid: 627d4d7a4c02b8b48a7b73bd94903450, type: 3}
+  - {fileID: 21300000, guid: a476a6382c3e21e4793d8e378ac9a522, type: 3}
+  - {fileID: 21300000, guid: 16cfa2aa0090b63479084790aaae76aa, type: 3}
+  - {fileID: 21300000, guid: dceb2d7d87318ff4bbd4d9c6ebcff251, type: 3}
+  - {fileID: 21300000, guid: f307839cb663ced418eba34d4b10380b, type: 3}
+  - {fileID: 21300000, guid: d7e36f7250034224f94d1024fea7fe87, type: 3}
+  redRankSprites:
+  - {fileID: 21300000, guid: 34f6ce901fc118246bf476f746a8fb1a, type: 3}
+  - {fileID: 21300000, guid: d9c4356d59bef1b4f857cbea84ebdbf6, type: 3}
+  - {fileID: 21300000, guid: fd06a5a3c4789c344830ff6b400bc8f4, type: 3}
+  - {fileID: 21300000, guid: d8664b4f40e40924f8a71e4ad7744665, type: 3}
+  - {fileID: 21300000, guid: d45a210997b28204a92fa0d44d57ede3, type: 3}
+  - {fileID: 21300000, guid: 2042501cd74875940bf1fd58e77f3ad0, type: 3}
+  - {fileID: 21300000, guid: a2ba5de139dc26643847a65820a3fe80, type: 3}
+  - {fileID: 21300000, guid: 15b115e3b772fe24d9c0cd15b5652eba, type: 3}
+  - {fileID: 21300000, guid: 19bd297962f144a4f99422315f727bb7, type: 3}
+  - {fileID: 21300000, guid: 0e9ba4857fbf6484a95ac1147acb55df, type: 3}
+  - {fileID: 21300000, guid: 33b2467b21b10364db6315404e9b940d, type: 3}
+  - {fileID: 21300000, guid: fba124c488d78534f87e78cd5104ea7e, type: 3}
+  - {fileID: 21300000, guid: e2f3991c8fabef4408c8fe5041dc33b4, type: 3}
+  - {fileID: 21300000, guid: e9326cae95401e34c8f46cc1a80c5b3d, type: 3}
+  - {fileID: 21300000, guid: 8e3c4ba0f6bed0b42971663df4fee9d8, type: 3}
+  clubSprite: {fileID: 21300000, guid: 23aa1168aad63d445a97abc856b82623, type: 3}
+  diamondSprite: {fileID: 21300000, guid: f9212dde8e89e424cbc3dbe4120f6f17, type: 3}
+  heartSprite: {fileID: 21300000, guid: ca55ec5a181cba645b3222a93d8e6801, type: 3}
+  spadeSprite: {fileID: 21300000, guid: 89437284a8b06404d8898a00fdf324de, type: 3}
+  jackFaceSprite: {fileID: 21300000, guid: b79f8dea9f0038d46911220f5a139b57, type: 3}
+  queenFaceSprite: {fileID: 21300000, guid: c9d58ce81efdff842941af1745cb9d13, type: 3}
+  kingFaceSprite: {fileID: 21300000, guid: 53611b2f7fc91c746ac2bb1c2355c88a, type: 3}
+  smallJokerFaceSprite: {fileID: 21300000, guid: 7dc6a09fbcef5a64e929c4f1c13b3eb8,
+    type: 3}
+  bigJokerFaceSprite: {fileID: 21300000, guid: 39f92bdc6c321f4429bf758fed7f92e2, type: 3}
